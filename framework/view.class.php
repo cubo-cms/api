@@ -1,7 +1,15 @@
 <?php
+/**
+ * @application    Cubo CMS API
+ * @type           Framework
+ * @class          View
+ * @version        2.0.4
+ * @date           2019-03-05
+ * @author         Dan Barto
+ * @copyright      Copyright (c) 2019 Cubo CMS; see COPYRIGHT.md
+ * @license        MIT License; see LICENSE.md
+ */
 namespace Cubo;
-
-defined('__CUBO__') || new \Exception("No use starting a class without an include");
 
 // Custom xml_encode function
 if(!function_exists('xml_encode')) {
