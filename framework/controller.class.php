@@ -1,7 +1,15 @@
 <?php
+/**
+ * @application    Cubo CMS API
+ * @type           Framework
+ * @class          Controller
+ * @version        2.0.4
+ * @date           2019-03-05
+ * @author         Dan Barto
+ * @copyright      Copyright (c) 2019 Cubo CMS; see COPYRIGHT.md
+ * @license        MIT License; see LICENSE.md
+ */
 namespace Cubo;
-
-defined('__CUBO__') || new \Exception("No use starting a class without an include");
 
 class Controller {
 	protected $_Model;
@@ -77,6 +85,7 @@ class Controller {
 				$this->_Model = new $model;
 				$_Data = $this->_Model::getAll($this->columns,$this->requireListPermission(),'name');
 				if($_Data) {
+					$this->expand($_Data,$this->expandColumns ?? []);
 					return $this->render($_Data);
 				} else {
 					// No items returned, return nothing
@@ -95,6 +104,20 @@ class Controller {
 	// Default method redirects to view
 	public function default() {
 		return $this->get();
+	}
+	
+	// Expand columns by retrieving relational objects
+	protected function expand(&$data,$columns) {
+		if(is_array($data)) {
+			foreach($data as &$item) {
+				$this->expand($item,$columns);
+			}
+		} elseif(is_object($data)) {
+			foreach($columns as $column) {
+				$model = __CUBO__.'\\'.$column;
+				$data->$column = $model::get($data->$column,"name,title");
+			}
+		}
 	}
 	
 	// Call view with requested method
@@ -127,6 +150,7 @@ class Controller {
 				$_Data = $this->_Model::get($this->getRouter()->getName(),$this->columns,$this->requireViewPermission());
 				if($_Data) {
 					// Pass data to view
+					$this->expand($_Data,$this->expandColumns ?? []);
 					return $this->render($_Data);
 				} else {
 					// Could not retrieve item; pass empty model to view
