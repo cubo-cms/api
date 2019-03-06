@@ -55,11 +55,11 @@ class Controller {
 		$filter = [];
 		if($this->containsAccessProperty())
 			if(Session::isAuthor())
-				$filter[] = '`accesslevel` IN ('.ACCESS_PUBLIC.','.ACCESS_REGISTERED.','.ACCESS_PRIVATE.','.ACCESS_ADMIN.')';
+				$filter[] = '`accesslevel` IN ('.ACCESS_PUBLIC.','.ACCESS_REGISTERED.','.ACCESS_ADMIN.')';
 			elseif(Session::isRegistered())
-				$filter[] = '`accesslevel` IN ('.ACCESS_PUBLIC.','.ACCESS_REGISTERED.','.ACCESS_PRIVATE.')';
+				$filter[] = '`accesslevel` IN ('.ACCESS_PUBLIC.','.ACCESS_REGISTERED.')';
 			else
-				$filter[] = '`accesslevel` IN ('.ACCESS_PUBLIC.','.ACCESS_GUEST.','.ACCESS_PRIVATE.')';
+				$filter[] = '`accesslevel` IN ('.ACCESS_PUBLIC.','.ACCESS_GUEST.')';
 		if($this->containsStatusProperty())
 			$filter[] = "`status`=".STATUS_PUBLISHED;
 		return implode(' AND ',$filter) ?? '1';
